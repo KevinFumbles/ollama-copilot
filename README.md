@@ -41,13 +41,28 @@ To use Mistral:
 ollama-copilot -provider mistral -token YOUR_MISTRAL_API_KEY -model codestral-latest
 ```
 
-### ollama-copilot
+### Automatic Installation & Configuration
+
+You can use the `install.sh` script to automate the build, installation, and configuration of `ollama-copilot` and your editors:
+
+```bash
+./install.sh
+```
+
+This script will:
+1. Build the binary and install it to `~/.local/bin/ollama-copilot`.
+2. Optionally install and start a **Systemd Service** (allowing you to configure `num-predict`).
+3. Automatically detect and offer to configure **Neovim**, **VSCode**, and **Zed**.
+
+### Manual Installation
+
+#### Binary
 
 ```bash
 go install github.com/bernardo-bruning/ollama-copilot@latest
 ```
 
-### Running
+#### Running
 
 Ensure your `$PATH` includes `$HOME/go/bin` or `$GOPATH/bin`.
 For example, in `~/.bashrc` or `~/.zshrc`:
@@ -65,14 +80,6 @@ or if you are hosting ollama in a container or elsewhere
 OLLAMA_HOST="http://192.168.133.7:11434" ollama-copilot
 ```
 
-### Systemd Service
-
-To run `ollama-copilot` as a systemd service:
-
-```
-./install.sh
-```
-
 ## Configuration
 
 You can configure the server using command-line flags:
@@ -88,11 +95,11 @@ You can configure the server using command-line flags:
 | `-provider` | `ollama` | Provider to run LLM |
 | `-token` | `TOKEN` | Token to pass for provider |
 | `-model` | `codellama:code` | LLM model to use |
-| `-num-predict` | `50` | Number of tokens to predict |
+| `-num-predict` | `250` | Number of tokens to predict (recommended `25` for copilot) |
 | `-template` | `<PRE> {{.Prefix}} <SUF> {{.Suffix}} <MID>` | Prompt template for fill-in-middle |
 | `-system` | `You are a helpful...` | System prompt to guide the model |
 
-## Configure IDE
+### Configure IDE (Manual)
 
 ### Neovim
 
@@ -166,5 +173,6 @@ let g:copilot_proxy_strict_ssl = v:false
 - [x] Enable completions APIs usage; fill in the middle.
 - [x] Enable flexible configuration model (Currently only supported llamacode:code).
 - [x] Create self-installing functionality.
+- [x] Auto-configure IDEs (Neovim, VSCode, Zed).
+- [x] Documentation on how to use.
 - [ ] Windows setup
-- [ ] Documentation on how to use.
