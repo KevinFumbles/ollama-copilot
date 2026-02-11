@@ -147,6 +147,18 @@ let g:copilot_proxy_strict_ssl = v:false
 }
 ```
 
+### PyCharm / JetBrains
+
+1. Open **Settings** (`Ctrl+Alt+S`)
+1. Navigate to **Appearance & Behavior** > **System Settings** > **HTTP Proxy**
+1. Select **Manual proxy configuration**:
+    - **HTTP**
+    - **Host name**: `localhost`
+    - **Port number**: `11435`
+1. Navigate to **Tools** > **Server Certificates**
+1. Check **Accept non-trusted certificates automatically**
+1. Restart PyCharm
+
 ### Emacs
 
 (experimental)
