@@ -57,7 +57,7 @@ func TestOllamaCompletionAddsEOT(t *testing.T) {
 
 	// Create the Ollama adapter
 	// Note: NewOllama calls api.ClientFromEnvironment() which reads OLLAMA_HOST
-	adapter, err := NewOllama("test-model", 100, "test-system")
+	adapter, err := NewOllama("test-model", "", 100, "test-system")
 	if err != nil {
 		t.Fatalf("NewOllama failed: %v", err)
 	}
@@ -67,6 +67,42 @@ func TestOllamaCompletionAddsEOT(t *testing.T) {
 		Prompt:      "test prompt",
 		Stop:        []string{"stop1"},
 		Temperature: 0.5,
+	}
+
+	err = adapter.Completion(context.Background(), req, func(resp ports.CompletionResponse) error {
+		return nil
+	})
+
+	if err != nil {
+		t.Fatalf("Completion failed: %v", err)
+	}
+}
+
+func TestOllamaCompletionWithToken(t *testing.T) {
+	token := "test-token"
+	// Start a mock server
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		expectedHeader := "Bearer " + token
+		if authHeader != expectedHeader {
+			t.Errorf("Expected Authorization header %s, got %s", expectedHeader, authHeader)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`{"response": "ok", "done": true}`))
+	}))
+	defer server.Close()
+
+	t.Setenv("OLLAMA_HOST", server.URL)
+
+	adapter, err := NewOllama("test-model", token, 100, "test-system")
+	if err != nil {
+		t.Fatalf("NewOllama failed: %v", err)
+	}
+
+	req := ports.CompletionRequest{
+		Prompt: "test prompt",
 	}
 
 	err = adapter.Completion(context.Background(), req, func(resp ports.CompletionResponse) error {
