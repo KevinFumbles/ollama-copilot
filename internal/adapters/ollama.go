@@ -77,8 +77,11 @@ func (o *Ollama) Completion(ctx context.Context, req ports.CompletionRequest, ca
 			"top_p":       req.TopP,
 			"stop":        append(req.Stop, "<EOT>"),
 			"num_predict": o.numPredict,
-			"num_ctx":     o.numCtx,
 		},
+	}
+
+	if o.numCtx > 0 {
+		generate.Options["num_ctx"] = o.numCtx
 	}
 
 	return o.client.Generate(ctx, &generate, func(resp api.GenerateResponse) error {

@@ -37,7 +37,7 @@
             ollama-copilot.num-ctx = lib.mkOption {
               type = lib.types.int;
               default = 0;
-              description = "Size of the context window for the model (default: 16384)";
+              description = "Size of the context window for the model";
             };
             ollama-copilot.port = lib.mkOption {
               type = lib.types.str;
